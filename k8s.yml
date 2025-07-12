@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-service
+  template:
+    metadata:
+      labels:
+        app: employee-service
+    spec:
+      containers:
+        - name: employee-service
+          image: 686754180139.dkr.ecr.ap-south-1.amazonaws.com/centime/employee-service:latest  # Updated line
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: employee-service-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: employee-service
+  ports:
+    - protocol: TCP
+      port: 80              # The port that the service will expose externally
+      targetPort: 8080      # The port on which the Flask app is running inside the container
